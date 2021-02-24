@@ -21,12 +21,12 @@ public class ballsManagers : MonoBehaviour
     #endregion
 
     [SerializeField]
-    private pelota pelota_Prefab;
-    private pelota pelota_inicial;
+    private Pelota pelota_Prefab;
+    private Pelota pelota_inicial;
     private Rigidbody2D pelotaInicialRB;
     public float velocidadPelotaInicial = 250;
 
-    public List<pelota> pelotas { get; set; }
+    public List<Pelota> pelotas { get; set; }
 
     private void Start(){
         InitBall();
@@ -52,11 +52,8 @@ public class ballsManagers : MonoBehaviour
         pelota_inicial = Instantiate(pelota_Prefab, startingPosition, Quaternion.identity);
         pelotaInicialRB = pelota_inicial.GetComponent<Rigidbody2D>();
 
-        this.pelotas = new List<pelota>{
+        this.pelotas = new List<Pelota>{
             pelota_inicial
         };
     }
-
-    
-
 }

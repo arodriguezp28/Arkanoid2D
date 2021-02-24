@@ -48,6 +48,9 @@ TagManager:
   - name: Pelota
     uniqueID: 1648189461
     locked: 0
+  - name: Bloque
+    uniqueID: 3265852571
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
