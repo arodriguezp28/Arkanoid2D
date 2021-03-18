@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -55,5 +56,14 @@ public class ballsManagers : MonoBehaviour
         this.pelotas = new List<Pelota>{
             pelota_inicial
         };
+    }
+
+    public void ResetBall()
+    {
+        foreach (var ball in this.pelotas.ToList())
+        {
+            Destroy(ball.gameObject);
+        }
+        InitBall();
     }
 }

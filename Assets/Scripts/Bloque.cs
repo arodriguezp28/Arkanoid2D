@@ -22,6 +22,7 @@ public class Bloque : MonoBehaviour
         this.HitPoints--;
 
         if (this.HitPoints <= 0){
+            BrickManager.Instance.RemainingBricks.Remove(this);
             OnBrickDestruction?.Invoke(this);
             SpawnDestroyEffect();
             Destroy(this.gameObject);
