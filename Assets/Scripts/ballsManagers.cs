@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using System.Collections;
+﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -56,6 +56,22 @@ public class ballsManagers : MonoBehaviour
         this.pelotas = new List<Pelota>{
             pelota_inicial
         };
+    }
+
+    public void SpawnBalls(Vector3 position, int count, bool isLightningBall)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Pelota spawnedBall = Instantiate(pelota_Prefab, position, Quaternion.identity) as Pelota;
+            if (isLightningBall)
+            {
+                spawnedBall.StartLightningBall();
+            }
+            Rigidbody2D spawnedBallRB = spawnedBall.GetComponent<Rigidbody2D>();
+            spawnedBallRB.isKinematic = false;
+            spawnedBallRB.AddForce(new Vector2(0, velocidadPelotaInicial));
+            this.pelotas.Add(spawnedBall);
+        }
     }
 
     public void ResetBall()
