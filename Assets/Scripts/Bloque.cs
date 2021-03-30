@@ -36,21 +36,43 @@ public class Bloque : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D col){
-        Pelota pelota = col.gameObject.GetComponent<Pelota>();
-        ApplyCollisionLogic(pelota);
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        bool instantKill = false;
+
+        if (collision.collider.tag == "Pelota")
+        {
+            Pelota pelota = collision.gameObject.GetComponent<Pelota>();
+            instantKill = pelota.isLightningBall;
+        }
+
+        if (collision.collider.tag == "Pelota" || collision.collider.tag == "Projectile")
+        {
+            this.TakeDamage(instantKill);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Pelota pelota = collision.gameObject.GetComponent<Pelota>();
-        ApplyCollisionLogic(pelota);
+        bool instantKill = false;
+
+        if (collision.tag == "Pelota")
+        {
+            Pelota pelota = collision.gameObject.GetComponent<Pelota>();
+            instantKill = pelota.isLightningBall;
+        }
+
+        if (collision.tag == "Pelota" || collision.tag == "Projectile")
+        {
+            this.TakeDamage(instantKill);
+        }
     }
 
-    private void ApplyCollisionLogic(Pelota pelota){
+    private void TakeDamage(bool instantKill){
         this.HitPoints--;
 
-        if (this.HitPoints <= 0 || (pelota != null && pelota.isLightningBall)){
+        if (this.HitPoints <= 0 || instantKill)
+        {
             BrickManager.Instance.RemainingBricks.Remove(this);
             OnBrickDestruction?.Invoke(this);
             OnBrickDestroy();

@@ -30,6 +30,12 @@ public class barra : MonoBehaviour
     private SpriteRenderer sr;
     private BoxCollider2D boxCol;
 
+    //Shooting
+    public bool PaddleIsShooting { get; set; }
+    public GameObject leftMuzzle;
+    public GameObject rightMuzzle;
+    public Projectile bulletPrefab;
+
     public float extendShrinkDuration = 10;
     public float paddleWidth = 2;
     public float paddleHeight = 0.28f;
@@ -44,6 +50,13 @@ public class barra : MonoBehaviour
     private void Update()
     {
         MovimientoBarra();
+        UpdateMuzzlePosition();
+    }
+
+    private void UpdateMuzzlePosition()
+    {
+        leftMuzzle.transform.position = new Vector3(this.transform.position.x - (this.sr.size.x / 2) + 0.271f, this.transform.position.y + 0.2f, this.transform.position.z);
+        rightMuzzle.transform.position = new Vector3(this.transform.position.x + (this.sr.size.x / 2) - 0.301f, this.transform.position.y + 0.2f, this.transform.position.z);
     }
 
     public void StartWidthAnimation(float newWidth)
@@ -114,5 +127,65 @@ public class barra : MonoBehaviour
                 pelotaRB.AddForce(new Vector2((Mathf.Abs(difference * 200)), ballsManagers.Instance.velocidadPelotaInicial));
             }
         }
+    }
+
+    public void StartShooting()
+    {
+        if (!this.PaddleIsShooting)
+        {
+            this.PaddleIsShooting = true;
+            StartCoroutine(StartShootingRoutine());
+        }
+    }
+
+    public IEnumerator StartShootingRoutine()
+    {
+        float fireCooldown = 0.5f;
+        float fireCooldownLeft = 0;
+
+        float shootingDuration = 10;
+        float shootingDurationLeft = shootingDuration;
+
+        this.PaddleIsShooting = true;
+        leftMuzzle.SetActive(true);
+        rightMuzzle.SetActive(true);
+
+
+        while (shootingDurationLeft >= 0)
+        {
+            fireCooldownLeft -= Time.deltaTime;
+            shootingDurationLeft -= Time.deltaTime;
+
+            if (fireCooldownLeft <= 0)
+            {
+                this.Shoot();
+                fireCooldownLeft = fireCooldown;
+            }
+            yield return null;
+        }
+
+        this.PaddleIsShooting = false;
+        leftMuzzle.SetActive(false);
+        rightMuzzle.SetActive(false);
+    }
+
+    private void Shoot()
+    {
+        leftMuzzle.SetActive(false);
+        rightMuzzle.SetActive(false);
+
+        leftMuzzle.SetActive(true);
+        rightMuzzle.SetActive(true);
+
+        this.SpawnBullet(leftMuzzle);
+        this.SpawnBullet(rightMuzzle);
+    }
+
+    private void SpawnBullet(GameObject muzzle)
+    {
+        Vector3 spawnPosition = new Vector3(muzzle.transform.position.x, muzzle.transform.position.y + 0.2f, muzzle.transform.position.z);
+        Projectile bullet = Instantiate(bulletPrefab, spawnPosition, Quaternion.identity);
+        Rigidbody2D bulletRB = bullet.GetComponent<Rigidbody2D>();
+        bulletRB.AddForce(new Vector2(0, 450f));
     }
 }
